@@ -1,4 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://<bryan>:<aaaaaaaa>@social-gsmvj.mongodb.net/test?retryWrites=true&w=majority",
-    "jwtSecret": "secretToken"
+        "mongoURI": "mongodb+srv://blancasbryan:aaaaaaaa@cluster0-gsmvj.mongodb.net/test?retryWrites=true&w=majority",
+        "jwtSecret": "secretToken"
 }
