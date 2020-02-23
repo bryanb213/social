@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
 
 //@GET api/auth
+//@dec get user profile
+//@access protected
 router.get('/', auth, async (req, res) => {
     try {
         // we can use req.user because in our middleware we 
@@ -21,7 +23,8 @@ router.get('/', auth, async (req, res) => {
 
 
 //@POST api/auth
-//@Desc Authenticate user and get token
+//@Desc Authenticate user and get token login
+//@access public
 router.post('/', [
     check('email', 'Please enter a valid email').isEmail(),
     check('password', 'Password is required').exists(),

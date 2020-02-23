@@ -9,6 +9,7 @@ const config = require('config');
 
 //@POST api/users
 //@Desc Register user
+//@access public
 router.post('/', [
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Please enter a valid email').isEmail(),
