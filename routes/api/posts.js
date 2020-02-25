@@ -18,7 +18,7 @@ router.post('/',[auth, [
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-        const user = await User.findById(req.user.id).select('-password');
+        const user =  User.findById(req.user.id).select('-password');
 
         const newPost = new Post({
             text: req.body.text,
@@ -27,7 +27,7 @@ router.post('/',[auth, [
             user: req.user.id
         });
 
-        const post = await newPost.save();
+        const post = newPost.save();
         res.json(post);
     } catch (err) {
         console.error(err.message)
@@ -159,8 +159,8 @@ router.post('/comment/:id',[auth, [
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-        const user = await User.findById(req.user.id).select('-password');
-        const post = await Post.findById(req.params.id)
+        const user =  User.findById(req.user.id).select('-password');
+        const post =  Post.findById(req.params.id)
 
         const newComment = new Post({
             text: req.body.text,
@@ -170,7 +170,7 @@ router.post('/comment/:id',[auth, [
         });
         post.comments.unshift(newComment);
 
-        await post.save();
+        post.save();
         res.json(post.comments);
     } catch (err) {
         console.error(err.message)
@@ -184,9 +184,9 @@ router.post('/comment/:id',[auth, [
 
 router.delete('/comment/:id/:comment_id', auth, (req, res) => {
     try {
-        const post = await Post.findById(req.params.id)
+        const post =  Post.findById(req.params.id)
         //get comment
-        const comment = await post.comments.find(comment => comment.id === req.params.comment_id)
+        const comment =  post.comments.find(comment => comment.id === req.params.comment_id)
         //see if comment exist
         if(!comment){
             return res.status(404).json({ msg: 'Comment not found' })
@@ -200,7 +200,7 @@ router.delete('/comment/:id/:comment_id', auth, (req, res) => {
 
         post.comments.splice(removeIndex, 1);
 
-        await post.save();
+        post.save();
 
         res.json(post.comments)
     } catch (err) {
