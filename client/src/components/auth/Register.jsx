@@ -1,6 +1,9 @@
 import React, { Fragment, useState } from 'react';
+import { connect } from 'react-redux';
+import { setAlert } from '../../actions/alert';
+import PropTypes from 'prop-types'
 
-const Register = () => {
+const Register = ({ setAlert }) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -8,16 +11,18 @@ const Register = () => {
         password2: ''
     });
 
-    const onChange = e => setFormData({...formData, [e.target.name]: e.target.value})
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
     const { name, email, password, password2 } = formData
 
-    const onSubmit = e =>  {
-        if(password !== password2){
-            console.log('pw does not match')
+    const onSubmit = async e => {
+        e.preventDefault();
+
+        if (password !== password2) {
+            setAlert('pw does not match', 'danger')
         } else {
-            console.log(formData)
+            console.log('SUCCESS');
         }
-    }
+    };
 
 
     return (
@@ -27,22 +32,22 @@ const Register = () => {
                 <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
                 <form className="form" onSubmit={e => onSubmit(e)}>
                     <div className="form-group">
-                        <input 
-                        type="text" 
-                        placeholder="Name" 
-                        name="name"
-                        value={name}
-                        onChange={e => onChange(e)}
-                        required />
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            name="name"
+                            value={name}
+                            onChange={e => onChange(e)}
+                            required />
                     </div>
                     <div className="form-group">
-                        <input 
-                        type="email" 
-                        placeholder="Email Address" 
-                        name="email" 
-                        value={email}
-                        onChange={e => onChange(e)}
-                        required
+                        <input
+                            type="email"
+                            placeholder="Email Address"
+                            name="email"
+                            value={email}
+                            onChange={e => onChange(e)}
+                            required
                         />
                         <small className="form-text"
                         >This site uses Gravatar so if you want a profile image, use a
@@ -80,4 +85,8 @@ const Register = () => {
     );
 }
 
-export default Register;
+Register.propTypes = {
+    setAlert: PropTypes.func.isRequired,
+}
+
+export default connect(null, { setAlert } )(Register);
