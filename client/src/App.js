@@ -1,7 +1,11 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-
+import store from './store';
 import './App.css';
+
+//Actions
+import { loadUser } from './actions/auth'
+import setAuthToken from './utils/setAuthToken';
 
 //Components
 import Navbar from './components/layout/Navbar';
@@ -10,8 +14,16 @@ import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Alert from './components/layout/Alert';
 
+if(localStorage.token){
+  setAuthToken(localStorage.token);
+}
 
-function App() {
+const App = () => {
+  //empty brackets makes it run only once
+  useEffect(()=> {
+    store.dispatch(loadUser());
+  }, [])
+
   return (
     <BrowserRouter>
       <Fragment>
