@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getCurrentProfile } from '../../actions/profile';
 import Spinner from '../layout/spinner'
-import {  Link } from 'react-router';
+import {  Link } from 'react-router-dom';
 
 const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { loading, profile } }) => {
     useEffect(() => {
@@ -19,7 +19,7 @@ const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { loading, prof
             {profile !== null ? <Fragment>has</Fragment> : 
             <Fragment>
                 <p>You have not set up a profile yet, please add some info</p>
-                <Link to='create/profile' className="btn btn-primary my-1" >Create Profile</Link>
+                <Link to='create-profile' className="btn btn-primary my-1" >Create Profile</Link>
             </Fragment>}
         </Fragment>
     )
