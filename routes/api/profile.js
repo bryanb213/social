@@ -10,7 +10,7 @@ const config = require('config');
 //@GET api/profile/me
 //@dec get current user profile
 //@access private
-router.get('/', auth, async (req, res) => {
+router.get('/me', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.user.id }).populate('user',
         ['name', 'avatar']);
@@ -18,6 +18,7 @@ router.get('/', auth, async (req, res) => {
         if(!profile){
             return res.status(400).json({ errors: [{ msg: 'User has no profile' }] });
         }
+        res.json(profile);
     } catch (err) {
         console.error(err.message)
         res.status(500).send('Server error')
@@ -29,7 +30,7 @@ router.get('/', auth, async (req, res) => {
 //@access private
 
 router.post('/', [
-    //check authenticatio
+    //check authentication
     auth,
     //do validation
     [
