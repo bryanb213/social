@@ -13,6 +13,8 @@ import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Alert from './components/layout/Alert';
+import Dashboard from './components/dashboard/Dashboard';
+
 
 if(localStorage.token){
   setAuthToken(localStorage.token);
@@ -34,6 +36,7 @@ const App = () => {
           <Switch>
             <Route exact path='/register' component={Register} />
             <Route exact path='/login' component={Login} />
+            <Route exact path='/dashboard' component={Dashboard} />
           </Switch>
         </section>
       </Fragment>
