@@ -21,7 +21,12 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 
 //PROFILE
 export const GET_PROFILE = 'GET_PROFILE';
+export const GET_PROFILES = 'GET_PROFILES';
 export const PROFILE_ERROR = 'PROFILE_ERROR';
+export const GET_REPOS = 'GET_REPOS';
 
 //UPDATE PROFILE
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+
+//DELETE ACCOUNT
+export const DELETE_ACCOUNT = 'DELETE_ACCOUNT';
