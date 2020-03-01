@@ -86,9 +86,9 @@ router.post('/', [
                 profile = await Profile.findOneAndUpdate(
                     { user: req.user.id }, 
                     {$set: profilefields},
-                    { new: true });
-
-                    return res.json(profile);
+                    { new: true }
+                );
+                return res.json(profile);
             }
             
             //Create profile with all fields
@@ -160,7 +160,7 @@ router.delete('/', auth, async (req, res) => {
 //@access private
 router.put('/experience', [auth, 
     check('title', 'Title is required').not().isEmpty(),
-    check('compant', 'Company is required').not().isEmpty(),
+    check('company', 'Company is required').not().isEmpty(),
     check('from', 'From date is required').not().isEmpty()
 
 ], async (req, res) => {

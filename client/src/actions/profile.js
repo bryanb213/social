@@ -42,8 +42,8 @@ export const getProfiles = () => async dispatch => {
 //Get profile by id
 export const getProfileById = (userId) => async dispatch => {
     try {
-
         const res = await axios.get(`http://localhost:5000/api/profile/user/${userId}`);
+        http://localhost:5000/api/profile/user/5e56bde814fae92482a807ef
 
         dispatch({
             type: GET_PROFILE,
@@ -73,6 +73,40 @@ export const getRepos = (username) => async dispatch => {
         })
     }
 }
+
+//create or update profile
+export const createProfile = (formData, history, edit = false) => async  dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const res = await axios.post('http://localhost:5000/api/profile', formData, config);
+
+        dispatch({
+            type: GET_PROFILE,
+            payload: res.data
+        });
+        dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
+        if(!edit){history.push('/dashboard')}
+        
+    } catch (err) {
+        //loop through errors
+        const errors = err.response.data.errors;
+        if (errors) {
+            errors.forEach(error => {
+                dispatch(setAlert(error.msg, 'danger'))
+            });
+        }
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        })
+    }
+}
+
 
 //Add Exp
 export const addExperience = (formData, history) => async  dispatch => {
@@ -179,7 +213,7 @@ export const deleteEducation = id => async dispatch => {
 export const deleteAccount = () => async dispatch => {
     if(window.confirm('Really? Deleting your account will be permanent!')) {
         try {
-        const res = await axios.delete(`http://localhost:5000/api/profile`)
+        await axios.delete(`http://localhost:5000/api/profile`)
         dispatch({
             type: CLEAR_PROFILE,
         })

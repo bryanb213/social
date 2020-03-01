@@ -13,7 +13,7 @@ import Education from './Education'
 const Dashboard = ({ deleteAccount, getCurrentProfile, auth: { user }, profile: { loading, profile } }) => {
     useEffect(() => {
         getCurrentProfile();
-    }, []);
+    }, [getCurrentProfile]);
 
     return (
         loading && profile === null ? <Spinner /> : <Fragment>
