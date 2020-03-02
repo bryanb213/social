@@ -7,7 +7,7 @@ import { getRepos } from '../../actions/profile'
 const ProfileGithub = ({ username, getRepos, repos }) => {
     useEffect(() => {
         getRepos(username)
-    }, [getRepos()])
+    }, [getRepos(username)])
     return (
         <div className="profile-github">
             <h2 className="text-primary my-1">Github Repos</h2>
@@ -19,7 +19,7 @@ const ProfileGithub = ({ username, getRepos, repos }) => {
                         <div key ={repo._id} className="repo bg-white p-1 my-1">
                             <div>
                             <h4>
-                                <a href="{repo.html_url}" target='_blank'  rel="noopener noreferer">{repo.name}</a>
+                                <a href={repo.html_url} target='_blank'  rel="noopener noreferer">{repo.name}</a>
                             </h4>
                             <p>{repo.description}</p>
                         </div>
@@ -44,7 +44,7 @@ ProfileGithub.propTypes = {
 }
 
 const mapStateToProps =  state => ({
-    repos: state.rofile.repos
+    repos: state.profile.repos
 })
 
-export default ProfileGithub;
+export default connect(mapStateToProps, { getRepos })(ProfileGithub);

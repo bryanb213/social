@@ -22,7 +22,7 @@ const ProfileEducation = ({ education: { school, degree, fieldofstudy, current ,
         </div>
     );
 }
-ProfileExperience.propTypes = {
+ProfileEducation.propTypes = {
     education: PropTypes.array.isRequired
 }
 

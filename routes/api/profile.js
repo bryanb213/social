@@ -124,7 +124,7 @@ router.get('/user/:user_id', async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', ['name', 'avatar']);
         if(!profile){
-            return res.status(400).json({ msg: 'There is no profile for user' });
+            return res.status(404).json({ msg: 'There is no profile for user' });
         }
         res.json(profile);
     } catch (err) {
@@ -288,14 +288,14 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
 })
 
 
-//@route  GET api/profile/github:username
+//@route  GET api/profile/github/:username
 //@desc   get user repo from github
 //@access public
 
 router.get('/github/:username', (req, res) => {
     try {
         const options = {
-            url: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${config.get('githubClientId')}/&client_secret=${config.get('githubSecret')}`,
+            url: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${config.get('githubClientId')}&client_secret=${config.get('githubSecret')}`,
             method: 'GET',
             headers: { 'user-agent': 'node.js' }
         };
@@ -304,7 +304,7 @@ router.get('/github/:username', (req, res) => {
             if(error) console.log(error);
 
             if(response.statusCode !== 200){
-                return res.status(400).json({ msg: 'No Github profile found' })
+                return res.status(404).json({ msg: 'No Github profile found' })
             }
 
             res.json(JSON.parse(body));
