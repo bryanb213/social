@@ -35,3 +35,6 @@ export const DELETE_ACCOUNT = 'DELETE_ACCOUNT';
 export const GET_POSTS = 'GET_POSTS';
 export const POST_ERROR = 'POST_ERROR';
 export const UPDATE_LIKE = 'UPDATE_LIKE';
+export const DELETE_POST = 'DELETE_POST';
+export const ADD_POST = 'ADD_POST';
+export const GET_POST_THREAD = 'GET_POST_THREAD'
