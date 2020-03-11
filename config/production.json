@@ -1,0 +1,6 @@
+{
+    "mongoURI": "mongodb+srv://blancasbryan:aaaaaaaa@cluster0-gsmvj.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtSecret": "secretToken",
+    "githubClientId":"653a5dd279159999a96c",
+    "githubSecret": "69987c7e5ee00732833f3350e3b0aae254ad7ab0"
+}
