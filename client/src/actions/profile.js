@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-import { GET_PROFILES ,GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, CLEAR_PROFILE, DELETE_ACCOUNT, GET_REPOS } from './types';
+import { GET_PROFILES, GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, CLEAR_PROFILE, DELETE_ACCOUNT, GET_REPOS } from './types';
 
 
 //Get current user profile
@@ -32,10 +32,11 @@ export const getProfiles = () => async dispatch => {
             payload: res.data
         });
     } catch (err) {
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
+        console.log(err);
+        // dispatch({
+        //     type: PROFILE_ERROR,
+        //     payload: { msg: err.response.statusText, status: err.response.status }
+        // })
     }
 }
 
@@ -49,30 +50,15 @@ export const getProfileById = (userId) => async dispatch => {
             payload: res.data
         });
     } catch (err) {
-        
+        console.log(err);
         dispatch({
             type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
+            payload: {}
         })
     }
 }
 
-//Get github repos
-export const getRepos = (username) => async dispatch => {
-    try {
-        const res = await axios.get(`http://localhost:5000/api/profile/github/${username}`);
 
-        dispatch({
-            type: GET_REPOS,
-            payload: res.data
-        });
-    } catch (err) {
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
-    }
-}
 
 //create or update profile
 export const createProfile = (formData, history, edit = false) => async  dispatch => {
@@ -90,8 +76,8 @@ export const createProfile = (formData, history, edit = false) => async  dispatc
             payload: res.data
         });
         dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
-        if(!edit){history.push('/dashboard')}
-        
+        if (!edit) { history.push('/dashboard') }
+
     } catch (err) {
         //loop through errors
         const errors = err.response.data.errors;
@@ -125,7 +111,7 @@ export const addExperience = (formData, history) => async  dispatch => {
         });
         dispatch(setAlert('Experience added', 'success'));
         history.push('/dashboard')
-        
+
     } catch (err) {
         //loop through errors
         const errors = err.response.data.errors;
@@ -158,7 +144,7 @@ export const addEducation = (formData, history) => async dispatch => {
         });
         dispatch(setAlert('Education added', 'success'));
         history.push('/dashboard')
-        
+
     } catch (err) {
         //loop through errors
         const errors = err.response.data.errors;
@@ -211,20 +197,20 @@ export const deleteEducation = id => async dispatch => {
 
 //delete acc and profile
 export const deleteAccount = () => async dispatch => {
-    if(window.confirm('Really? Deleting your account will be permanent!')) {
+    if (window.confirm('Really? Deleting your account will be permanent!')) {
         try {
-        await axios.delete(`http://localhost:5000/api/profile`)
-        dispatch({
-            type: CLEAR_PROFILE,
-        })
-        dispatch({ type: DELETE_ACCOUNT })
-        dispatch(setAlert('Your account has been permanently removed', 'success'))
-    } catch (err) {
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
-    }
+            await axios.delete(`http://localhost:5000/api/profile`)
+            dispatch({
+                type: CLEAR_PROFILE,
+            })
+            dispatch({ type: DELETE_ACCOUNT })
+            dispatch(setAlert('Your account has been permanently removed', 'success'))
+        } catch (err) {
+            dispatch({
+                type: PROFILE_ERROR,
+                payload: { msg: err.response.statusText, status: err.response.status }
+            })
+        }
     }
 }
 

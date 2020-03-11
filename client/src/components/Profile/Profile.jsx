@@ -62,9 +62,9 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth, match })
                         }
                     </div>
                     {
-                        profile.githubusername && (
+                        profile.githubusername ? (
                             <ProfileGithub username={profile.githubusername} />
-                        )
+                            ) : null
                     }
                 </div>
             </Fragment>

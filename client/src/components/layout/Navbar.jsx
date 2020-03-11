@@ -5,45 +5,55 @@ import PropTypes from 'prop-types'
 import { logout } from '../../actions/auth';
 
 
-const Navbar = ({ auth: {isAuthenticated, loading}, logout }) => {
+
+
+
+
+const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
+
+
     const authLinks = (
         <ul>
-        <li>
-                <Link to='/profiles'>
+            <li>
+            <Link to='/profiles'>
                 Developers
-                </Link>
+            </Link>
             </li>
             <li>
-                <Link to='/posts' >Posts</Link>
+            <Link to='/dashboard'>
+                <i className="fas fa-user" ></i> {' '}
+                Dashboard
+            </Link>
             </li>
             <li>
-                <Link to='/dashboard'>
-                <i className="fas fa-user" ></i>
-                <span className="hide-sm"> Dashboard</span>
-                </Link>
+                <Link onClick={logout} >
+                    <i className="fas fa-sign-out-alt"></i>{' '}Logout
+            </Link>
             </li>
-            <li>
-            <a onClick={logout} href="#!">
-            <i className="fas fa-sign-out-alt"></i>
-            <span className="hide-sm">Logout</span>
-            </a>
-            </li>
-        </ul> 
+        </ul>
     );
     const guestLinks = (
         <ul>
-            <li><Link to='/profiles'>Developers</Link></li>
-            <li><Link to="/register">Register</Link></li>
-            <li><Link to="/login">Login</Link></li>
-        </ul> 
+            <li>
+                <Link to='/profiles'>Developers</Link>
+            </li>
+            <li>
+                <Link to='/register'>Register</Link>
+            </li>
+            <li>
+                <Link to='/login'>Login</Link>
+            </li>
+        </ul>
+
+
     );
     return (
-            <nav className="navbar bg-dark">
-                <h1>
-                    <Link to="/"><i className="fas fa-code"></i> DevConnector</Link>
-                </h1>
-                { !loading && (<Fragment> {isAuthenticated ? authLinks : guestLinks } </Fragment>) }
-            </nav>
+        <nav class="navbar bg-dark">
+            <h1>
+                <Link to="/"><i class="fas fa-code"></i> DevFinder</Link>
+            </h1>
+            {!loading && (<Fragment> {isAuthenticated ? authLinks : guestLinks} </Fragment>)}  
+        </nav>
     )
 }
 
