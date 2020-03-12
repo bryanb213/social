@@ -22,7 +22,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
         e.preventDefault();
 
         if (password !== password2) {
-            setAlert('pw does not match', 'danger')
+            setAlert('passwords does not match', 'danger')
         } else {
             register({ name, email, password });
         }
