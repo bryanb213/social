@@ -107,15 +107,31 @@ router.post('/', [
 //@GET api/profile
 //@dec get all profiles
 //@access public
-router.get('/', async (req, res) => {
-    try {
-        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
-        res.json(profiles);
-    } catch (err) {
-        console.error(err.message)
-        res.status(500).send('Server error')
-    }
-})
+// router.get('/all', async (req, res) => {
+//     try {
+//         const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+//         res.json(profiles);
+//     } catch (err) {
+//         console.error(err.message)
+//         res.status(500).send('Server error')
+//     }
+// })
+router.get('/all', (req, res) => {
+    const errors = {};
+
+    Profile.find()
+        .populate('user', ['name', 'avatar'])
+        .then(profiles => {
+            if (!profiles) {
+                errors.noprofile = 'There are no profiles';
+                return res.status(404).json(errors);
+            }
+
+            res.json(profiles);
+        })
+        .catch(err => res.status(404).json({ profile: 'There are no profiles' }));
+});
+
 
 
 //@GET api/profile/user/:user_id
