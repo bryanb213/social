@@ -33,10 +33,11 @@ export const getProfiles = () => async dispatch => {
         });
     } catch (err) {
         console.log(err);
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
+    //     dispatch({
+    //         type: PROFILE_ERROR,
+    //         payload: { msg: err.response.statusText, status: err.response.status }
+    //     })
+    // }
     }
 }
 
