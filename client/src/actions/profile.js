@@ -25,7 +25,7 @@ export const getProfiles = () => async dispatch => {
     dispatch({ type: CLEAR_PROFILE })
     try {
 
-        const res = await axios.get('http://localhost:5000/api/profile');
+        const res = await axios.get('http://localhost:5000/api/profile/all');
 
         dispatch({
             type: GET_PROFILES,
@@ -33,10 +33,10 @@ export const getProfiles = () => async dispatch => {
         });
     } catch (err) {
         console.log(err);
-        // dispatch({
-        //     type: PROFILE_ERROR,
-        //     payload: { msg: err.response.statusText, status: err.response.status }
-        // })
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        })
     }
 }
 

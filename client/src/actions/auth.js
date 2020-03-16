@@ -83,9 +83,9 @@ export const login = (email, password ) =>  async dispatch => {
         //         dispatch(setAlert(error.msg, 'danger'))
         //     });
         // }
-        // dispatch({
-        //     type: LOGIN_FAIL
-        // })
+        dispatch({
+            type: LOGIN_FAIL
+        })
     }
 
 }
