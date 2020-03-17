@@ -4,8 +4,10 @@ import store from './store';
 import './App.css';
 
 //Actions
-import { loadUser } from './actions/auth'
+import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
+import jwt_decode from 'jwt-decode';
+
 
 //Components
 import Navbar from './components/layout/Navbar';
