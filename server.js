@@ -2,12 +2,18 @@ const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors')
 const path = require('path')
+const passport = require('passport');
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 app.use(cors());
 //conect DB
 connectDB();
+
+// Body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //init middleware
 app.use(express.json({ extended: false }))
