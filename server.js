@@ -3,6 +3,7 @@ const connectDB = require('./config/db');
 const cors = require('cors')
 const path = require('path')
 const passport = require('passport');
+const bodyParser = require('body-parser');
 
 const app = express();
 
