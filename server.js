@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
 
-const app = express();
+const app = express()
 
 const PORT = process.env.PORT || 5000;
 app.use(cors());
