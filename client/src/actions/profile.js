@@ -1,217 +1,172 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-import { GET_PROFILES, GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, CLEAR_PROFILE, DELETE_ACCOUNT, GET_REPOS } from './types';
+import {
+    GET_PROFILES, GET_PROFILE, PROFILE_LOADING,
+    CLEAR_PROFILE,
+    GET_ERRORS,
+    SET_CURRENT_USER
+} from './types';
 
 
 //Get current user profile
 export const getCurrentProfile = () => async dispatch => {
-    try {
-        const res = await axios.get('http://localhost:5000/api/profile/me');
+    dispatch(setProfileLoading());
 
-        dispatch({
+    axios.get('http://localhost:5000/api/profile/me')
+        .then(res => dispatch({
             type: GET_PROFILE,
             payload: res.data
         })
-    } catch (err) {
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
-    }
-}
-
-//Get all profiles
-export const getProfiles = () => async dispatch => {
-    dispatch({ type: CLEAR_PROFILE })
-    try {
-
-        const res = await axios.get('http://localhost:5000/api/profile/all');
-
-        dispatch({
-            type: GET_PROFILES,
-            payload: res.data
-        });
-    } catch (err) {
-        console.log(err);
-    //     dispatch({
-    //         type: PROFILE_ERROR,
-    //         payload: { msg: err.response.statusText, status: err.response.status }
-    //     })
-    // }
-    }
-}
-
-//Get profile by id
-export const getProfileById = (userId) => async dispatch => {
-    try {
-        const res = await axios.get(`http://localhost:5000/api/profile/user/${userId}`);
-
-        dispatch({
+        )
+        .catch(err => dispatch({
             type: GET_PROFILE,
-            payload: res.data
-        });
-    } catch (err) {
-        console.log(err);
-        dispatch({
-            type: PROFILE_ERROR,
             payload: {}
-        })
-    }
+        }))
 }
 
-
-
-//create or update profile
-export const createProfile = (formData, history, edit = false) => async  dispatch => {
-    try {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-
-        const res = await axios.post('http://localhost:5000/api/profile', formData, config);
-
-        dispatch({
-            type: GET_PROFILE,
-            payload: res.data
-        });
-        dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
-        if (!edit) { history.push('/dashboard') }
-
-    } catch (err) {
-        //loop through errors
-        const errors = err.response.data.errors;
-        if (errors) {
-            errors.forEach(error => {
-                dispatch(setAlert(error.msg, 'danger'))
-            });
-        }
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
-    }
-}
-
-
-//Add Exp
-export const addExperience = (formData, history) => async  dispatch => {
-    try {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-
-        const res = await axios.put('http://localhost:5000/api/profile/experience', formData, config);
-
-        dispatch({
-            type: UPDATE_PROFILE,
-            payload: res.data
-        });
-        dispatch(setAlert('Experience added', 'success'));
-        history.push('/dashboard')
-
-    } catch (err) {
-        //loop through errors
-        const errors = err.response.data.errors;
-        if (errors) {
-            errors.forEach(error => {
-                dispatch(setAlert(error.msg, 'danger'))
-            });
-        }
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
-    }
-}
-
-//Add Edu
-export const addEducation = (formData, history) => async dispatch => {
-    try {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-
-        const res = await axios.put('http://localhost:5000/api/profile/education', formData, config);
-
-        dispatch({
-            type: UPDATE_PROFILE,
-            payload: res.data
-        });
-        dispatch(setAlert('Education added', 'success'));
-        history.push('/dashboard')
-
-    } catch (err) {
-        //loop through errors
-        const errors = err.response.data.errors;
-        if (errors) {
-            errors.forEach(error => {
-                dispatch(setAlert(error.msg, 'danger'))
-            });
-        }
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
-    }
-}
-
-//Delete exp
-export const deleteExperience = id => async dispatch => {
-    try {
-        const res = await axios.delete(`http://localhost:5000/api/profile/experience/${id}`)
-        dispatch({
-            type: UPDATE_PROFILE,
-            payload: res.data
-        })
-        dispatch(setAlert('Experience removed', 'success'))
-    } catch (err) {
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
-    }
-}
-
-
-//Delete edu
-export const deleteEducation = id => async dispatch => {
-    try {
-        const res = await axios.delete(`http://localhost:5000/api/profile/education/${id}`)
-        dispatch({
-            type: UPDATE_PROFILE,
-            payload: res.data
-        })
-        dispatch(setAlert('Education removed', 'success'))
-    } catch (err) {
-        dispatch({
-            type: PROFILE_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        })
-    }
-}
-
-//delete acc and profile
-export const deleteAccount = () => async dispatch => {
-    if (window.confirm('Really? Deleting your account will be permanent!')) {
-        try {
-            await axios.delete(`http://localhost:5000/api/profile`)
+// Get profile by handle
+export const getProfileByHandle = handle => dispatch => {
+    dispatch(setProfileLoading());
+    axios
+        .get(`http://localhost:5000/api/profile/handle/${handle}`)
+        .then(res =>
             dispatch({
-                type: CLEAR_PROFILE,
+                type: GET_PROFILE,
+                payload: res.data
             })
-            dispatch({ type: DELETE_ACCOUNT })
-            dispatch(setAlert('Your account has been permanently removed', 'success'))
-        } catch (err) {
+        )
+        .catch(err =>
             dispatch({
-                type: PROFILE_ERROR,
-                payload: { msg: err.response.statusText, status: err.response.status }
+                type: GET_PROFILE,
+                payload: null
             })
-        }
-    }
-}
+        );
+};
 
+// Create Profile
+export const createProfile = (profileData, history) => dispatch => {
+    axios
+        .post('http://localhost:5000/api/profile', profileData)
+        .then(res => history.push('/dashboard'))
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
+};
+
+// Add experience
+export const addExperience = (expData, history) => dispatch => {
+    axios
+        .post('http://localhost:5000/api/profile/experience', expData)
+        .then(res => history.push('/dashboard'))
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
+};
+
+// Add education
+export const addEducation = (eduData, history) => dispatch => {
+    axios
+        .post('http://localhost:5000/api/profile/education', eduData)
+        .then(res => history.push('/dashboard'))
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
+};
+
+// Delete Experience
+export const deleteExperience = id => dispatch => {
+    axios
+        .delete(`http://localhost:5000/api/profile/experience/${id}`)
+        .then(res =>
+            dispatch({
+                type: GET_PROFILE,
+                payload: res.data
+            })
+        )
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
+};
+
+// Delete Education
+export const deleteEducation = id => dispatch => {
+    axios
+        .delete(`http://localhost:5000/api/profile/education/${id}`)
+        .then(res =>
+            dispatch({
+                type: GET_PROFILE,
+                payload: res.data
+            })
+        )
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
+};
+
+// Get all profiles
+export const getProfiles = () => dispatch => {
+    dispatch(setProfileLoading());
+    axios
+        .get('http://localhost:5000/api/profile/all')
+        .then(res =>
+            dispatch({
+                type: GET_PROFILES,
+                payload: res.data
+            })
+        )
+        .catch(err =>
+            dispatch({
+                type: GET_PROFILES,
+                payload: null
+            })
+        );
+};
+
+// Delete account & profile
+export const deleteAccount = () => dispatch => {
+    if (window.confirm('Are you sure? This can NOT be undone!')) {
+        axios
+            .delete('http://localhost:5000/api/profile')
+            .then(res =>
+                dispatch({
+                    type: SET_CURRENT_USER,
+                    payload: {}
+                })
+            )
+            .catch(err =>
+                dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data
+                })
+            );
+    }
+};
+
+// Profile loading
+export const setProfileLoading = () => {
+    return {
+        type: PROFILE_LOADING
+    };
+};
+
+// Clear profile
+export const clearCurrentProfile = () => {
+    return {
+        type: CLEAR_PROFILE
+    };
+};
