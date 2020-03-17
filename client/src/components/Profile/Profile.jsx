@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ProfileHeader from './ProfileHeader';
+import ProfileTop from './ProfileTop';
 import ProfileAbout from './ProfileAbout';
 import ProfileCreds from './ProfileCreds';
 import ProfileGithub from './ProfileGithub';
-import Spinner from '../common/Spinner';
-import { getProfileByHandle } from '../../actions/profileActions';
+import Spinner from '../common/spinner';
+import { getProfileByHandle } from '../../actions/profile';
 
 class Profile extends Component {
     componentDidMount() {
@@ -39,7 +39,7 @@ class Profile extends Component {
                         </div>
                         <div className="col-md-6" />
                     </div>
-                    <ProfileHeader profile={profile} />
+                    <ProfileTop profile={profile} />
                     <ProfileAbout profile={profile} />
                     <ProfileCreds
                         education={profile.education}

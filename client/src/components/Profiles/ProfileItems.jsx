@@ -47,7 +47,7 @@ class ProfileItems extends Component {
     }
 }
 
-ProfileItem.propTypes = {
+ProfileItems.propTypes = {
     profile: PropTypes.object.isRequired
 };
 

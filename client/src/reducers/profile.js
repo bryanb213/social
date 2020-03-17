@@ -1,4 +1,4 @@
-import { GET_PROFILE, CLEAR_PROFILE, GET_PROFILES } from "../actions/types";
+import { GET_PROFILE, CLEAR_PROFILE, GET_PROFILES, PROFILE_LOADING } from "../actions/types";
 
 const initialState = {
     profile: null,
