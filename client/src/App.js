@@ -25,7 +25,7 @@ import AddEducation from './components/add-credentials/AddEducation';
 import AddExperience from './components/add-credentials/AddExperience';
 import Profiles from './components/Profiles/Profiles';
 import Profile from './components/Profile/Profile';
-import NotFound from './components/not-found/NotFound';
+import NotFound from './components/not-found/NotFound'; 
 
 
 // Check for token
