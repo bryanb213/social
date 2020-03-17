@@ -3,10 +3,9 @@ const cors = require('cors')
 const path = require('path')
 const passport = require('passport');
 const bodyParser = require('body-parser');
-
+const mongoose = require('mongoose');
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
-const posts = require('./routes/api/posts');
 
 const app = express();
 
@@ -22,7 +21,7 @@ const db = require('./config/keys').mongoURI;
 
 // Connect to MongoDB
 mongoose
-  .connect(db, { useNewUrlParser: true }) // Let us remove that nasty deprecation warrning :)
+  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true }) // Let us remove that nasty deprecation warrning :)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 
