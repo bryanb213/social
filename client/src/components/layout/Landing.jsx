@@ -1,36 +1,50 @@
-import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { PropTypes } from 'prop-types';
+import { connect } from 'react-redux';
 
-const Landing = ({ isAuthenticated }) => {
-    if (isAuthenticated) {
-        return <Redirect to='/dashboard' />
+class Landing extends Component {
+    componentDidMount() {
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/dashboard');
+        }
     }
-    return (
-        <section class="landing">
-            <div class="dark-overlay">
-                <div class="landing-inner">
-                    <h1 class="x-large">Developer Finder</h1>
-                    <p class="lead">
-                        Looking for a developer for your business? Come in and search hundreds of developers waiting to hear from you! Developers create/show off your skills by creating a profile and show off what you can do!
-            </p>
-                    <div class="buttons">
-                        <Link to="/register" class="btn btn-primary">Sign Up</Link>
-                        <Link to="/login" class="btn btn-light">Login</Link>
+
+    render() {
+        return (
+            <div className="landing">
+                <div className="dark-overlay landing-inner text-light">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12 text-center">
+                                <h1 className="display-3 mb-4">Developer Connector</h1>
+                                <p className="lead">
+                                    {' '}
+                  Create a developer profile/portfolio, share posts and get help
+                  from other developers
+                </p>
+                                <hr />
+                                <Link to="/register" className="btn btn-lg btn-info mr-2">
+                                    Sign Up
+                </Link>
+                                <Link to="/login" className="btn btn-lg btn-light">
+                                    Login
+                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
-    )
-};
-
-Landing.propTypes = {
-    isAuthenticated: PropTypes.bool.isRequired,
+        );
+    }
 }
 
+Landing.propTypes = {
+    auth: PropTypes.object.isRequired
+};
+
 const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
-})
+    auth: state.auth
+});
 
 export default connect(mapStateToProps)(Landing);

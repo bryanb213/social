@@ -1,31 +1,47 @@
-import React, { useEffect, Fragment } from 'react';
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import  Spinner from '../layout/spinner'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import Spinner from '../common/Spinner';
+import ProfileItems from './ProfileItems';
 import { getProfiles } from '../../actions/profile';
-import ProfileItems from './ProfileItems.jsx';
 
-const Profiles = ({  getProfiles, profile: { profiles, loading }}) => {
-    useEffect(() => {
-        getProfiles();
-    }, [getProfiles]);
-    return (
-        <Fragment>
-            { loading ? <Spinner />  : <Fragment>
-                <h1 className="large text-primary">Developers</h1>
-                <p className="lead">
-                    <i className="fab fa-connectdevelop"></i> Browse and connect with our developers
-                </p>
-                <div className="profiles">
-                    { profiles.length > 0 ? (
-                        profiles.map( profile => (
-                            <ProfileItems key={profile._id} profile={profile} />
-                        ))
-                    ) : <h4>No profiles found...</h4> }
+class Profiles extends Component {
+    componentDidMount() {
+        this.props.getProfiles();
+    }
+
+    render() {
+        const { profiles, loading } = this.props.profile;
+        let profileItems;
+
+        if (profiles === null || loading) {
+            profileItems = <Spinner />;
+        } else {
+            if (profiles.length > 0) {
+                profileItems = profiles.map(profile => (
+                    <ProfileItems key={profile._id} profile={profile} />
+                ));
+            } else {
+                profileItems = <h4>No profiles found...</h4>;
+            }
+        }
+
+        return (
+            <div className="profiles">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-12">
+                            <h1 className="display-4 text-center">Developer Profiles</h1>
+                            <p className="lead text-center">
+                                Browse and connect with developers
+              </p>
+                            {profileItems}
+                        </div>
+                    </div>
                 </div>
-            </Fragment>}
-        </Fragment>
-    );
+            </div>
+        );
+    }
 }
 
 Profiles.propTypes = {
@@ -34,7 +50,7 @@ Profiles.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    profile:state.profile
-})
+    profile: state.profile
+});
 
 export default connect(mapStateToProps, { getProfiles })(Profiles);
