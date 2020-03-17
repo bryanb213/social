@@ -2,69 +2,121 @@ const express = require('express');
 const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
-const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
+const keys = require('../../config/keys');
+const passport = require('passport');
 const User = require('../../models/User');
 const config = require('config');
 
-//@POST api/users
-//@Desc Register user
-//@access public
-router.post('/', [
-    check('name', 'Name is required').not().isEmpty(),
-    check('email', 'Please enter a valid email').isEmail(),
-    check('password', 'Password must be more than six characters').isLength({ min: 6 }),
-], async (req, res) => {
-    //will hold errors
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({ errors: errors.array() })
+// Load Input Validation
+const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
+
+// @route   POST api/users/register
+// @desc    Register user
+// @access  Public
+router.post('/register', (req, res) => {
+    const { errors, isValid } = validateRegisterInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+        return res.status(400).json(errors);
     }
-    //pull used data
-    const { name, email, password } = req.body
-    try {
-        //see if user exist
-        let user = await User.findOne({ email })
-        if(user){
-            res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+
+    User.findOne({ email: req.body.email }).then(user => {
+        if (user) {
+            errors.email = 'Email already exists';
+            return res.status(400).json(errors);
+        } else {
+            const avatar = gravatar.url(req.body.email, {
+                s: '200', // Size
+                r: 'pg', // Rating
+                d: 'mm' // Default
+            });
+
+            const newUser = new User({
+                name: req.body.name,
+                email: req.body.email,
+                avatar,
+                password: req.body.password
+            });
+
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(newUser.password, salt, (err, hash) => {
+                    if (err) throw err;
+                    newUser.password = hash;
+                    newUser
+                        .save()
+                        .then(user => res.json(user))
+                        .catch(err => console.log(err));
+                });
+            });
+        }
+    });
+});
+
+
+// @route   GET api/users/login
+// @desc    Login User / Returning JWT Token
+// @access  Public
+router.post('/login', (req, res) => {
+    const { errors, isValid } = validateLoginInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // Find user by email
+    User.findOne({ email }).then(user => {
+        // Check for user
+        if (!user) {
+            errors.email = 'User not found';
+            return res.status(404).json(errors);
         }
 
-    //GET user gravatar
-        const avatar = gravatar.url(email, {
-            //size
-            s:'200',
-            //rating
-            r: 'pg',
-            //default image
-            d: 'mm'
-        })
-        user = new User({
-            name,
-            email,
-            password,
-            avatar
-        });
-    //encrypt pw
-        const salt = await bcrypt.genSalt(10);
+        // Check Password
+        bcrypt.compare(password, user.password).then(isMatch => {
+            if (isMatch) {
+                // User Matched
+                const payload = { id: user.id, name: user.name, avatar: user.avatar }; // Create JWT Payload
 
-        user.password = await bcrypt.hash(password, salt);
-
-    //save user
-    await user.save();
-    //return jwt
-        const payload = {
-            user: {
-                id: user.id
+                // Sign Token
+                jwt.sign(
+                    payload,
+                    keys.secretOrKey,
+                    { expiresIn: 3600 },
+                    (err, token) => {
+                        res.json({
+                            success: true,
+                            token: 'Bearer ' + token
+                        });
+                    }
+                );
+            } else {
+                errors.password = 'Password incorrect';
+                return res.status(400).json(errors);
             }
-        }
-        jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 3600 }, (err, token) => {
-            if(err) throw err;
-            res.json({ token })
-        })
-    } catch (err) {
-        console.error(err.message)
-        res.status(500).send('Server error')
+        });
+    });
+});
+
+// @route   GET api/users/current
+// @desc    Return current user
+// @access  Private
+router.get(
+    '/current',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        res.json({
+            id: req.user.id,
+            name: req.user.name,
+            email: req.user.email
+        });
     }
-})
+);
 
 module.exports = router;
