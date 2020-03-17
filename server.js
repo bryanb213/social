@@ -1,20 +1,30 @@
 const express = require('express');
-const connectDB = require('./config/db');
 const cors = require('cors')
 const path = require('path')
 const passport = require('passport');
 const bodyParser = require('body-parser');
 
+const users = require('./routes/api/users');
+const profile = require('./routes/api/profile');
+const posts = require('./routes/api/posts');
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 app.use(cors());
-//conect DB
-connectDB();
 
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// DB Config
+const db = require('./config/keys').mongoURI;
+
+// Connect to MongoDB
+mongoose
+  .connect(db, { useNewUrlParser: true }) // Let us remove that nasty deprecation warrning :)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
 
 // Passport middleware
 app.use(passport.initialize());
@@ -26,9 +36,8 @@ require('./config/passport')(passport);
 app.use(express.json({ extended: false }))
 
 //Define routes
-app.use('/api/users', require('./routes/api/users'));
-app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/profile', require('./routes/api/profile'));
+app.use('/api/users', users);
+app.use('/api/profile', profile);
 
 //serve
 if(process.env.NODE_ENV === 'production') {
