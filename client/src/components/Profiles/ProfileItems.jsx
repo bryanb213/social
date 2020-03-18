@@ -8,6 +8,7 @@ class ProfileItems extends Component {
         const { profile } = this.props;
 
         return (
+            console.log(profile),
             <div className="card card-body bg-light mb-3">
                 <div className="row">
                     <div className="col-2">
@@ -26,9 +27,9 @@ class ProfileItems extends Component {
                                 <span>{profile.location}</span>
                             )}
                         </p>
-                        <Link to={`/profile/${profile.handle}`} className="btn btn-info">
+                        <Link to={`/profile/${profile.user._id}`} className="btn btn-info">
                             View Profile
-            </Link>
+                        </Link>
                     </div>
                     <div className="col-md-4 d-none d-md-block">
                         <h4>Skill Set</h4>

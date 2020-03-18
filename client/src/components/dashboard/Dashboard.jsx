@@ -29,9 +29,10 @@ class Dashboard extends Component {
             // Check if logged in user has profile data
             if (Object.keys(profile).length > 0) {
                 dashboardContent = (
+                    console.log(profile),
                     <div>
                         <p className="lead text-muted">
-                            Welcome <Link to={`/profile/${profile.handle}`}>{user.name}</Link>
+                            Welcome <Link to={`/profile/${profile.user._id}`}>{user.name}</Link>
                         </p>
                         <DashboardActions />
                         <Experience experience={profile.experience} />
@@ -86,6 +87,4 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(
-    Dashboard
-);
+export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(Dashboard);

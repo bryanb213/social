@@ -7,16 +7,18 @@ import ProfileAbout from './ProfileAbout';
 import ProfileCreds from './ProfileCreds';
 import ProfileGithub from './ProfileGithub';
 import Spinner from '../common/spinner';
-import { getProfileByHandle } from '../../actions/profile';
+import { getProfileById } from '../../actions/profile';
 
 class Profile extends Component {
     componentDidMount() {
-        if (this.props.match.params.handle) {
-            this.props.getProfileByHandle(this.props.match.params.handle);
+        //console.log(this.props.match.params.id);
+        if (this.props.match.params.id) {
+            this.props.getProfileById(this.props.match.params.id);
         }
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps.profile)
         if (nextProps.profile.profile === null && this.props.profile.loading) {
             this.props.history.push('/not-found');
         }
@@ -35,7 +37,7 @@ class Profile extends Component {
                         <div className="col-md-6">
                             <Link to="/profiles" className="btn btn-light mb-3 float-left">
                                 Back To Profiles
-              </Link>
+                            </Link>
                         </div>
                         <div className="col-md-6" />
                     </div>
@@ -65,7 +67,7 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-    getProfileByHandle: PropTypes.func.isRequired,
+    getProfileById: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired
 };
 
@@ -73,4 +75,4 @@ const mapStateToProps = state => ({
     profile: state.profile
 });
 
-export default connect(mapStateToProps, { getProfileByHandle })(Profile);
+export default connect(mapStateToProps, { getProfileById })(Profile);

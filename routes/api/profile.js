@@ -89,7 +89,7 @@ router.get('/user/:user_id', (req, res) => {
                 errors.noprofile = 'There is no profile for this user';
                 res.status(404).json(errors);
             }
-
+            console.log(profile)
             res.json(profile);
         })
         .catch(err =>

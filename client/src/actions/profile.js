@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setAlert } from './alert';
+//import { setAlert } from './alert';
 import {
     GET_PROFILES, GET_PROFILE, PROFILE_LOADING,
     CLEAR_PROFILE,
@@ -12,7 +12,7 @@ import {
 export const getCurrentProfile = () => async dispatch => {
     dispatch(setProfileLoading());
 
-    axios.get('http://localhost:5000/api/profile/me')
+    axios.get('http://localhost:5000/api/profile')
         .then(res => dispatch({
             type: GET_PROFILE,
             payload: res.data
@@ -24,16 +24,16 @@ export const getCurrentProfile = () => async dispatch => {
         }))
 }
 
-// Get profile by handle
-export const getProfileByHandle = handle => dispatch => {
+// Get profile by id
+export const getProfileById = id => dispatch => {
     dispatch(setProfileLoading());
     axios
-        .get(`http://localhost:5000/api/profile/handle/${handle}`)
-        .then(res =>
+        .get(`http://localhost:5000/api/profile/user/${id}`)
+        .then(res =>{console.log(res)
             dispatch({
                 type: GET_PROFILE,
                 payload: res.data
-            })
+            })}
         )
         .catch(err =>
             dispatch({
