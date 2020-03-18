@@ -3,7 +3,7 @@ const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const keys = require('../../config/keys');
+const keys = require('../../config/keys_dev').secretOrKey;
 const passport = require('passport');
 const User = require('../../models/User');
 const config = require('config');
@@ -87,7 +87,7 @@ router.post('/login', (req, res) => {
                 // Sign Token
                 jwt.sign(
                     payload,
-                    keys.secretOrKey,
+                    keys,
                     { expiresIn: 3600 },
                     (err, token) => {
                         res.json({
